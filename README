@@ -1,0 +1,10 @@
+Sagepay API interface
+
+Python interface to the SagePay API. Currently supports:
+
+- Direct Payments (w/ 3D Secure)
+- Refunds
+
+---
+
+Thanks to Anthony Blackshaw from Getme Ltd. who was the Author of the first version of this library.
