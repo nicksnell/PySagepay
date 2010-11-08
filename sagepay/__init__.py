@@ -9,7 +9,7 @@ from wrappers import *
 
 __all__ = ('SagePayAPI',)
 
-VERSION = '2.23'
+SAGEPAY_VERSION = '2.23'
 
 class SagePayAPI(object):
 	
@@ -22,17 +22,21 @@ class SagePayAPI(object):
 		
 	def __unicode__(self):
 		return u'<SagePay Interface for %s>' % self.vendor
-		
+	
+	def _encode_arguments(self, params):
+		"""UTF-8 encode the argument values - used primarily """
+		return dict([k, v.encode('utf-8')] for k, v in params.items())
+	
 	def register(self, transaction):
 		"""Register a Payment with SagePay"""
 		
 		transaction = transaction.as_dict()
 		transaction.update({
 			'Vendor': self.vendor,
-			'VPSProtocol': VERSION,
+			'VPSProtocol': SAGEPAY_VERSION,
 		})
 		
-		data = urllib.urlencode(transaction)
+		data = urllib.urlencode(self._encode_arguments(transaction))
 		request = urllib2.Request(TRANSACTION_URLS[self.mode], data)
 		
 		try:
@@ -52,7 +56,7 @@ class SagePayAPI(object):
 			'PaRes': pa_res,
 		}
 		
-		data = urllib.urlencode(authorize)
+		data = urllib.urlencode(self._encode_arguments(authorize))
 		request = urllib2.Request(AUTH_3D_SECURE_URLS[self.mode], data)
 		
 		try:
@@ -70,11 +74,11 @@ class SagePayAPI(object):
 		refund = refund.as_dict()
 		refund.update({
 			'Vendor': self.vendor,
-			'VPSProtocol': VERSION,
+			'VPSProtocol': SAGEPAY_VERSION,
 			'TxType': 'REFUND',
 		})
 		
-		data = urllib.urlencode(refund)
+		data = urllib.urlencode(self._encode_arguments(refund))
 		request = urllib2.Request(REFUND_URLS[self.mode], data)
 		
 		try:

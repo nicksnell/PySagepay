@@ -15,7 +15,7 @@ Python interface to the SagePay API. Currently supports:
 
 setup(
 	name='Sagepay',
-	version=1.0,
+	version=1.1,
 	description='Sagepay API interface',
 	long_description=long_description,
 	author='Nick Snell',

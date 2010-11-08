@@ -78,10 +78,30 @@ class SagePayTransaction(object):
 		'AUTHENTICATE',
 	)
 	
-	ACCEPTED_ACCOUNT_TYPES = ('E','C','M')
-	ACCEPTED_3D_SECURE_OPTIONS = ('0','1','2','3')
-	ACCEPTED_AVS_CV2_OPTIONS = ('0','1','2','3')
-	ACCEPTED_GIFT_AID_PAYMENT_OPTIONS = ('0','1')
+	ACCEPTED_ACCOUNT_TYPES = (
+		'E', # Use the e-commerce merchant account (default).
+		'C', # Use the continuous authority merchant account (if present).
+		'M', # Use the mail order, telephone order account (if present)
+	)
+	
+	ACCEPTED_3D_SECURE_OPTIONS = (
+		'0', # If 3D-Secure checks are possible and rules allow, perform the checks and apply the authorisation rules (default).
+		'1', # Force 3D-Secure checks for this transaction only (if your account is 3D-enabled) and apply rules for authorisation.
+		'2', # Do not perform 3D-Secure checks for this transaction only and always authorise.
+		'3', # Force 3D-Secure checks for this transaction (if your account is 3D-enabled) but ALWAYS obtain an auth code, irrespective of rule base.
+	)
+	
+	ACCEPTED_AVS_CV2_OPTIONS = (
+		'0', # If AVS/CV2 enabled then check them. If rules apply, use rules (default).
+		'1', # Force AVS/CV2 checks even if not enabled for the account. If rules apply, use rules.
+		'2', # Force NO AVS/CV2 checks even if enabled on account.
+		'3', # Force AVS/CV2 checks even if not enabled for the account but DON'T apply any rules.
+	)
+	
+	ACCEPTED_GIFT_AID_PAYMENT_OPTIONS = (
+		'0', # This transaction is not a Gift Aid charitable donation (default)
+		'1', # This payment is a Gift Aid charitable donation and the customer has AGREED to donate the tax.
+	)
 	
 	def __init__(self, _type, vendor_code, amount, currency, description, card, **options):
 		
