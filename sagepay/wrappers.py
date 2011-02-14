@@ -1,5 +1,7 @@
 """Wrappers around SagePay operations"""
 
+from settings import ACCEPTED_CARD_TYPES
+
 __all__ = ('SagePayResponse', 'SagePayTransaction', 'SagePayRefund', 'SagePayCard', 
 			'SagePayBasket', 'SagePayItem')
 
