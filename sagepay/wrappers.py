@@ -47,6 +47,7 @@ class SagePayTransaction(object):
 	authorising (via 3D Secure) transactions."""
 	
 	ACCEPTED_OPTIONS = {
+		# Python Key / SagePay Key
 		'account_type': 'AccountType',
 		'apply_3d_secure': 'Apply3DSecure',
 		'apply_avs_cv2': 'ApplyAVSCV2',
@@ -166,36 +167,7 @@ class SagePayTransaction(object):
 				data[actual_key] = str(getattr(self, actual_key))
 				
 		return data
-		
-class SagePayRefund(object):
-	"""The 'SagePayRefund' class provides a data structure for making a refund."""
-	
-	def __init__(self, vendor_tx_code, amount, currency, description, related_vps_id, related_vendor_tx_code, 
-				related_security_code, related_authorisation_number):
-				
-		self.vendor_tx_code = vendor_tx_code
-		self.amount = amount
-		self.currency = currency
-		self.description = description
-		self.related_vps_id = related_vps_id
-		self.related_vendor_tx_code = related_vendor_tx_code
-		self.related_security_code = related_security_code
-		self.related_authorisation_number = related_authorisation_number
-		
-	def as_dict(self):
-		data = {
-			'VendorTxCode': self.vendor_tx_code,
-			'Amount': self.amount,
-			'Currency': self.currency,
-			'Description': self.description,
-			'RelatedVPSTxId': self.related_vps_id,
-			'RelatedVendorTxCode': self.related_vendor_tx_code,
-			'RelatedSecurityKey': self.related_security_code,
-			'RelatedTxAuthNo': self.related_authorisation_number,
-		}
-		
-		return data
-		
+
 class SagePayCard(object):
 	"""The 'VSPCard' class provides a data structure for payment cards."""
 	

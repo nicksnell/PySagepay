@@ -4,6 +4,7 @@ Python interface to the SagePay API. Currently supports:
 
 - Direct Payments (w/ 3D Secure)
 - Refunds
+- Deferred Payments with Release/Abort
 
 ---
 

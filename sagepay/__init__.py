@@ -1,4 +1,12 @@
-"""SagePay Payment Gateway Interface"""
+"""SagePay Payment Gateway Interface
+
+Currently supports:
+- Direct Payments (w/ 3D Secure)
+- Refunds
+- Deferred Payments with Release/Abort
+"""
+
+# Nick Snell <nick@orpo.co.uk>
 
 import urllib
 import urllib2
@@ -27,22 +35,27 @@ class SagePayAPI(object):
 		"""UTF-8 encode the argument values - used primarily """
 		return dict([k, v.encode('utf-8')] for k, v in params.items())
 	
-	def register(self, transaction):
-		"""Register a Payment with SagePay"""
+	def abort(self, vps_id, vendor_tx_code, vendor_tx_code, security_code, authorisation_number):
+		"""Abort a deferred payment"""
 		
-		transaction = transaction.as_dict()
-		transaction.update({
+		abort = {
 			'Vendor': self.vendor,
 			'VPSProtocol': SAGEPAY_VERSION,
-		})
+			'TxType': 'ABORT',
+			
+			'VPSTxId': vps_id,
+			'VendorTxCode': vendor_tx_code,
+			'SecurityKey': security_code,
+			'TxAuthNo': authorisation_number,
+		}
 		
-		data = urllib.urlencode(self._encode_arguments(transaction))
-		request = urllib2.Request(TRANSACTION_URLS[self.mode], data)
+		data = urllib.urlencode(self._encode_arguments(abort))
+		request = urllib2.Request(ABORT_URLS[self.mode], data)
 		
 		try:
 			response_page = urllib2.urlopen(request)
 		except Exception, e:
-			raise SagePayAPIError(u'Unable to contact "%s" because: %s' % (TRANSACTION_URLS[self.mode], e))
+			raise SagePayAPIError(u'Unable to contact "%s" because: %s' % (ABORT_URLS[self.mode], e))
 		else:
 			response = SagePayResponse(response_page.read())
 			
@@ -68,15 +81,24 @@ class SagePayAPI(object):
 			
 		return response
 		
-	def refund(self, refund):
+	def refund(self, vendor_tx_code, amount, currency, description, related_vps_id, related_vendor_tx_code, 
+				related_security_code, related_authorisation_number):
 		"""Make a Refund"""
 		
-		refund = refund.as_dict()
-		refund.update({
+		refund = {
 			'Vendor': self.vendor,
 			'VPSProtocol': SAGEPAY_VERSION,
 			'TxType': 'REFUND',
-		})
+			
+			'VendorTxCode': vendor_tx_code,
+			'Amount': amount,
+			'Currency': currency,
+			'Description': description,
+			'RelatedVPSTxId': related_vps_id,
+			'RelatedVendorTxCode': related_vendor_tx_code,
+			'RelatedSecurityKey': related_security_code,
+			'RelatedTxAuthNo': related_authorisation_number,
+		}
 		
 		data = urllib.urlencode(self._encode_arguments(refund))
 		request = urllib2.Request(REFUND_URLS[self.mode], data)
@@ -89,3 +111,52 @@ class SagePayAPI(object):
 			response = SagePayResponse(response_page.read())
 			
 		return response
+		
+	def register(self, transaction):
+		"""Register a Payment with SagePay"""
+		
+		transaction = transaction.as_dict()
+		transaction.update({
+			'Vendor': self.vendor,
+			'VPSProtocol': SAGEPAY_VERSION,
+		})
+		
+		data = urllib.urlencode(self._encode_arguments(transaction))
+		request = urllib2.Request(TRANSACTION_URLS[self.mode], data)
+		
+		try:
+			response_page = urllib2.urlopen(request)
+		except Exception, e:
+			raise SagePayAPIError(u'Unable to contact "%s" because: %s' % (TRANSACTION_URLS[self.mode], e))
+		else:
+			response = SagePayResponse(response_page.read())
+			
+		return response
+	
+	def release(self, release_amount, vps_id, vendor_tx_code, security_code, authorisation_number):
+		"""Release a payment that had previously be deferred"""
+		
+		release = {
+			'Vendor': self.vendor,
+			'VPSProtocol': SAGEPAY_VERSION,
+			'TxType': 'RELEASE',
+			
+			'ReleaseAmount': release_amount,
+			'VPSTxId': vps_id,
+			'VendorTxCode': vendor_tx_code,
+			'SecurityKey': security_code,
+			'TxAuthNo': authorisation_number,
+		}
+		
+		data = urllib.urlencode(self._encode_arguments(release))
+		request = urllib2.Request(RELEASE_URLS[self.mode], data)
+		
+		try:
+			response_page = urllib2.urlopen(request)
+		except Exception, e:
+			raise SagePayAPIError(u'Unable to contact "%s" because: %s' % (RELEASE_URLS[self.mode], e))
+		else:
+			response = SagePayResponse(response_page.read())
+			
+		return response
+		

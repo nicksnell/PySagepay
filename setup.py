@@ -11,11 +11,12 @@ Python interface to the SagePay API. Currently supports:
 
 - Direct Payments (w/ 3D Secure)
 - Refunds
+- Deferred Payments with Release/Abort
 """
 
 setup(
 	name='Sagepay',
-	version=1.1,
+	version=1.2,
 	description='Sagepay API interface',
 	long_description=long_description,
 	author='Nick Snell',

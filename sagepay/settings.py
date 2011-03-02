@@ -1,3 +1,4 @@
+"""SagePay Settings"""
 
 ACCEPTED_CARD_TYPES = (
 	('AMEX', 'American Express'),
@@ -21,20 +22,38 @@ ACCEPTED_MODES = (
 	'live', # Live (Requires SagePay account)
 )
 
-TRANSACTION_URLS = {
-	'sim':'https://test.sagepay.com/Simulator/VSPDirectGateway.asp',
-	'test':'https://test.sagepay.com/gateway/service/vspdirect-register.vsp',
-	'live':'https://ukvps.protx.com/vspgateway/service/vspdirect-register.vsp'
+ABORT_URLS = {
+	'sim': 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorAbortTx',
+	'test': 'https://test.sagepay.com/gateway/service/abort.vsp',
+	'live': 'https://live.sagepay.com/gateway/service/abort.vsp',
 }
 
 AUTH_3D_SECURE_URLS = {
-	'sim':'https://test.sagepay.com/Simulator/VSPDirectCallback.asp',
-	'test':'https://test.sagepay.com/gateway/service/direct3dcallback.vsp',
-	'live':'https://live.sagepay.com/gateway/service/direct3dcallback.vsp'
+	'sim': 'https://test.sagepay.com/Simulator/VSPDirectCallback.asp',
+	'test': 'https://test.sagepay.com/gateway/service/direct3dcallback.vsp',
+	'live': 'https://live.sagepay.com/gateway/service/direct3dcallback.vsp',
 }
 
 REFUND_URLS = {
-	'sim':'https://test.sagepay.com/Simulator/VSPDirectGateway?service=refund',
-	'test':'https://test.sagepay.com/gateway/service/refund.vsp',
-	'live':'https://live.sagepay.com/gateway/service/refund.vsp'
+	'sim': 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorRefundTx',
+	'test': 'https://test.sagepay.com/gateway/service/refund.vsp',
+	'live': 'https://live.sagepay.com/gateway/service/refund.vsp',
+}
+
+RELEASE_URLS = {
+	'sim': 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorReleaseTx',
+	'test': 'https://test.sagepay.com/gateway/service/release.vsp',
+	'live': 'https://live.sagepay.com/gateway/service/release.vsp',
+}
+
+REPEAT_URLS = {
+	'sim': 'https://test.sagepay.com/Simulator/VSPServerGateway.asp?Service=VendorRepeatTx',
+	'test': 'https://test.sagepay.com/gateway/service/repeat.vsp',
+	'live': 'https://live.sagepay.com/gateway/service/repeat.vsp',
+}
+
+TRANSACTION_URLS = {
+	'sim':'https://test.sagepay.com/Simulator/VSPDirectGateway.asp',
+	'test':'https://test.sagepay.com/gateway/service/vspdirect-register.vsp',
+	'live':'https://ukvps.protx.com/vspgateway/service/vspdirect-register.vsp',
 }
