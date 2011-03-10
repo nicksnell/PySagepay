@@ -35,7 +35,7 @@ class SagePayAPI(object):
 		"""UTF-8 encode the argument values - used primarily """
 		return dict([k, v.encode('utf-8')] for k, v in params.items())
 	
-	def abort(self, vps_id, vendor_tx_code, vendor_tx_code, security_code, authorisation_number):
+	def abort(self, vps_id, vendor_tx_code, security_code, authorisation_number):
 		"""Abort a deferred payment"""
 		
 		abort = {
@@ -80,7 +80,34 @@ class SagePayAPI(object):
 			response = SagePayResponse(response_page.read())
 			
 		return response
+	
+	def paypal_capture(self, vps_id, ammount, accept=True):
+		"""Authorize a PayPal Checkout"""
 		
+		# NOTE: It appears sometimes COMPLETE is not enabled on your SagePay account,
+		# even when PayPal is enabled. You need to contact SagePay if this is the case.
+		# Typically you will get an error:
+		# 'INVALID 4006 : The TxType requested is not supported on this account'
+		
+		paypal_capture = {
+			'TxType': 'COMPLETE',
+			'VPSTxId': vps_id,
+			'Amount': ammount,
+			'Accept': 'YES' if accept else 'NO',
+		}
+		
+		data = urllib.urlencode(self._encode_arguments(paypal_capture))
+		request = urllib2.Request(PAYPAL_COMPLETE_URLS[self.mode], data)
+		
+		try:
+			response_page = urllib2.urlopen(request)
+		except Exception, e:
+			raise SagePayAPIError(u'Unable to contact "%s" because: %s' % (PAYPAL_COMPLETE_URLS[self.mode], e))
+		else:
+			response = SagePayResponse(response_page.read())
+		
+		return response
+	
 	def refund(self, vendor_tx_code, amount, currency, description, related_vps_id, related_vendor_tx_code, 
 				related_security_code, related_authorisation_number):
 		"""Make a Refund"""

@@ -1,5 +1,6 @@
 """Wrappers around SagePay operations"""
 
+from exceptions import SagePayTransactionError
 from settings import ACCEPTED_CARD_TYPES
 
 __all__ = ('SagePayResponse', 'SagePayTransaction', 'SagePayRefund', 'SagePayCard', 
@@ -73,6 +74,10 @@ class SagePayTransaction(object):
 		'delivery_city': 'DeliveryCity',
 		'delivery_country': 'DeliveryCountry',
 		'delivery_post_code': 'DeliveryPostCode',
+		
+		# Special attribute for PayPal intergration. Can only
+		# be used is Card has a type 'PAYPAL'
+		'paypal_url': 'PayPalCallbackURL',
 	}
 	
 	ACCEPTED_TYPES = (
@@ -119,6 +124,17 @@ class SagePayTransaction(object):
 		self.currency = currency
 		self.description = description
 		self.card = card
+		
+		# Check for PayPal intergration
+		if self.card.type == 'PAYPAL':
+			# Paypal requires a specific argument in the transaction
+			if not 'paypal_url' in options:
+				raise SagePayTransactionError('You must specify a "paypal_url" when using a Paypal "card".')
+				
+		else:
+			# Dont send paypal urls for no paypal checkouts
+			if 'paypal_url' in options:
+				raise SagePayTransactionError('You must NOT specify a "paypal_url" when using a non "Paypal" card.')
 		
 		for key, value in options.items():
 			if key in self.ACCEPTED_OPTIONS:
@@ -177,8 +193,9 @@ class SagePayCard(object):
 		'start_date': 'StartDate',
 	}
 	
-	def __init__(self, holder, number, _type, expiry_date, **options):
+	def __init__(self, holder=None, number=None, _type=None, expiry_date=None, **options):
 		
+		assert _type is not None, u'You must specify a card type!'
 		assert _type in [card[0] for card in ACCEPTED_CARD_TYPES], u'Unrecognised card type "%s"' % _type
 		
 		self.type = _type
@@ -202,10 +219,10 @@ class SagePayCard(object):
 		"""Returns a dictionary of the card details"""
 		
 		data = {
-			'CardHolder': self.holder,
-			'CardNumber': self.number,
+			'CardHolder': self.holder or '',
+			'CardNumber': self.number or '',
 			'CardType': self.type,
-			'ExpiryDate': self.expiry_date,
+			'ExpiryDate': self.expiry_date or '',
 		}
 		
 		for key in self.ACCEPTED_OPTIONS:

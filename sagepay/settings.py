@@ -10,6 +10,8 @@ ACCEPTED_CARD_TYPES = (
 	('SOLO', 'Solo'),
 	('VISA', 'Visa'),
 	#('UKE', ''), # Special card type for "A Debit card for processing all currencies"
+	
+	('PAYPAL', 'PayPal'), # Special card type to checkout via paypal
 )
 
 MODE_SIM = 'sim'
@@ -56,4 +58,10 @@ TRANSACTION_URLS = {
 	'sim':'https://test.sagepay.com/Simulator/VSPDirectGateway.asp',
 	'test':'https://test.sagepay.com/gateway/service/vspdirect-register.vsp',
 	'live':'https://ukvps.protx.com/vspgateway/service/vspdirect-register.vsp',
+}
+
+PAYPAL_COMPLETE_URLS = {
+	'sim': 'https://test.sagepay.com/Simulator/complete.asp',
+	'test': 'https://test.sagepay.com/gateway/service/complete.vsp',
+	'live': 'https://live.sagepay.com/gateway/service/complete.vsp',
 }
