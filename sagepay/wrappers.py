@@ -3,7 +3,7 @@
 from exceptions import SagePayTransactionError
 from settings import ACCEPTED_CARD_TYPES
 
-__all__ = ('SagePayResponse', 'SagePayTransaction', 'SagePayRefund', 'SagePayCard', 
+__all__ = ('SagePayResponse', 'SagePayTransaction', 'SagePayCard', 
 			'SagePayBasket', 'SagePayItem')
 
 class SagePayResponse(object):
