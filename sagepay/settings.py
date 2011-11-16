@@ -57,7 +57,7 @@ REPEAT_URLS = {
 TRANSACTION_URLS = {
 	'sim':'https://test.sagepay.com/Simulator/VSPDirectGateway.asp',
 	'test':'https://test.sagepay.com/gateway/service/vspdirect-register.vsp',
-	'live':'https://ukvps.protx.com/vspgateway/service/vspdirect-register.vsp',
+	'live':'https://live.sagepay.com/vspgateway/service/vspdirect-register.vsp',
 }
 
 PAYPAL_COMPLETE_URLS = {
